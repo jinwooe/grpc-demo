@@ -1,4 +1,4 @@
-# grpc-demo
+# Generate keys and certificates
 
 ```sh
 # Generate CA key
@@ -22,4 +22,21 @@ openssl rsa -in server.key -out server.key
 # Convert the server private key to a format understood by Java 
 openssl pkcs8 -topk8 -inform PEM -outform PEM -in server.key -out key.pem -nocrypt
 
+```
+
+# Enable TLS
+## gRPC Server
+```java
+int port = 50051;
+server = ServerBuilder.forPort(port)
+         .useTransportSecurity(new File("crypto/server.crt"), new File("crypto/key.pem"))
+         .addService(new GreeterImpl())
+         .build()
+         .start();
+```
+## gPRC Client
+```java
+NettyChannelBuilder.forAddress(host, port)
+                .sslContext(GrpcSslContexts.forClient().trustManager(new File("crypto/server.crt")).build())
+                .build();
 ```
