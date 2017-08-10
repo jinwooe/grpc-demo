@@ -40,3 +40,5 @@ NettyChannelBuilder.forAddress(host, port)
                 .sslContext(GrpcSslContexts.forClient().trustManager(new File("crypto/server.crt")).build())
                 .build();
 ```
+
+Note that the host which grpc client tries to connect must be the same as  the "common name" of the server's certificate
